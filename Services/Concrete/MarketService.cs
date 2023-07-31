@@ -17,17 +17,11 @@ namespace Final_Project.Services.Concrete
         private List<Product> products;
         private List<Sales> sales;
         private List<SaleItem> saleItems;
-        private List<Category> categories;
         public MarketService()
         {
             products = new List<Product>();
             sales = new List<Sales>();
             saleItems = new List<SaleItem>();
-            categories = new List<Category>();
-        }        
-        public List<Category> GetCategories()
-        {
-            return categories;
         }
         public List<Product> GetProducts()
         {
@@ -85,7 +79,7 @@ namespace Final_Project.Services.Concrete
 
             products.RemoveAt(productIndex);
         }
-        public List<Product> SearchProductByName(string name)
+        public List<Product> SearchProductsByName(string name)
         {
             if(string.IsNullOrWhiteSpace(name)) throw new Exception("Name can't be empty");
             var foundProducts = products.Where(x=>x.Name.ToLower().Trim()==name.ToLower().Trim()).ToList();
@@ -93,13 +87,13 @@ namespace Final_Project.Services.Concrete
             return foundProducts;
         }
 
-        public List<Product> ShowProductByPriceRange(decimal minPrice, decimal maxPrice)
+        public List<Product> ShowProductsByPriceRange(decimal minPrice, decimal maxPrice)
         {
             if (minPrice > maxPrice) throw new Exception("Min Price can't be higher than max Price");
             return products.Where(x=>x.Price >= minPrice && x.Price<=maxPrice).ToList();
         }
 
-        public List<Product> ShowProductFromCategory(Category category)
+        public List<Product> ShowProductsByCategory(Category category)
         {
             var productsFromCategory = products.Where(p => p.Category == category).ToList();
             return productsFromCategory;
@@ -129,23 +123,24 @@ namespace Final_Project.Services.Concrete
 
         public int AddSale(int productId, int quantity, DateTime date)
         {
-            List<SaleItem> saleItems = new List<SaleItem>();
-
             var product = products.Find(x => x.ID == productId);
 
             if (quantity <= 0) throw new Exception("Quantity can't be less than 0 or equal to 0!");
             if (product == null) throw new Exception("Product not found.");
             if (product.Quantity < quantity) throw new Exception("Not enough product in stock.");
-            else
-            {
-                var price = product.Price * quantity;
-                product.Quantity -= quantity;
 
-                var saleItem = new SaleItem(product, quantity);
-                saleItems.Add(saleItem);
+            var price = product.Price * quantity;
+            product.Quantity -= quantity;
 
-                Console.WriteLine("Product was successfully added!");
-            }
+            var saleItem = new SaleItem(product, quantity);
+            List<SaleItem> saleItems = new List<SaleItem> { saleItem };
+
+            var sale = new Sales(price, saleItems, date);
+            sales.Add(sale);
+
+            Console.WriteLine("Product was successfully added to the sale.");
+
+
             int option;
             do
             {
@@ -169,11 +164,16 @@ namespace Final_Project.Services.Concrete
                         Console.WriteLine("Add product's quantity:");
                         int productQuantity = int.Parse(Console.ReadLine());
 
-                        var Product = products.Find(x=>x.ID == productID);
-                        var amount = Product.Price * productQuantity;
-                        Product.Quantity -= productQuantity;
+                        var prduct = products.Find(x=>x.ID == productID);
+                        if (quantity <= 0) throw new Exception("Quantity can't be less than 0 or equal to 0!");
+                        if (prduct == null) throw new Exception("Product not found.");
+                        if (prduct.Quantity < quantity) throw new Exception("Not enough product in stock.");
 
-                        var SaleItem = new SaleItem(Product, productQuantity);
+                        var amount = prduct.Price * productQuantity;
+                        prduct.Quantity -= productQuantity;
+
+                        var saleItm = new SaleItem(prduct, productQuantity);
+                        saleItems.Add(saleItm);
                         break; 
                     case 2:
                         break;
@@ -181,28 +181,29 @@ namespace Final_Project.Services.Concrete
                         Console.WriteLine("No such option!");
                         break;
                 }
-            } while (option!=0);
+            } while (option!=2);
+
             return sales.Last().ID;
         }
-        public void RemoveSales(int id)
+        public void RemoveSale(int saleId)
         {
-            if (id < 0) throw new Exception("ID can't be less than 0!");
+            if (saleId < 0) throw new Exception("ID can't be less than 0!");
 
-            int saleIndex = sales.FindIndex(p => p.ID == id);
+            int saleIndex = sales.FindIndex(p => p.ID == saleId);
 
-            if (saleIndex == -1) throw new Exception("Sale not found!");
+            if (saleIndex == -1) throw new ArgumentException("Sale not found!");
 
             products.RemoveAt(saleIndex);
         }
-        public List<Sales> ShowSaleByID(int id)
+        public List<Sales> ShowSaleByID(int saleId)
         {
-            if (id < 0) throw new Exception("ID can't be less than 0!");
+            if (saleId < 0) throw new Exception("ID can't be less than 0!");
 
-            var salesList = sales.Where(sale => sale.ID == id).ToList();
+            var salesList = sales.Where(sale => sale.ID == saleId).ToList();
 
             if (salesList.Count == 0)
             {
-                Console.WriteLine($"No sale found with the given ID: {id}");
+                Console.WriteLine($"No sale found with the given ID: {saleId}");
             }
 
             return salesList;
@@ -216,14 +217,42 @@ namespace Final_Project.Services.Concrete
         }
 
         public List<Sales> ShowSalesByDateRange(DateTime fromDate, DateTime dueDate)
-        {
+        { 
             if (fromDate > dueDate) throw new Exception("From Date can't be after due Date!");
             return sales.Where(x => x.DateTime >= fromDate && x.DateTime <= dueDate).ToList();
         }
 
         public List<Sales> ShowSalesByExactDate(DateTime datetime)
         {
-            throw new NotImplementedException();
+            var salesList = sales.Where(sale => sale.DateTime.Date == datetime.Date).ToList();
+
+            if (salesList.Count == 0) throw new Exception($"No sales found for {datetime.Date.ToShortDateString()}.");
+
+            return salesList;
+        }
+
+        public void ReturnProductFromSale(int saleId, int productId, int quantity)
+        {
+            if (saleId < 0) throw new ArgumentException("Sale ID can't be less than 0.", nameof(saleId));
+            if (productId < 0) throw new ArgumentException("Product ID can't be less than 0.", nameof(productId));
+            if (quantity <= 0) throw new ArgumentException("Quantity must be greater than 0.", nameof(quantity));
+
+            var sale = sales.FirstOrDefault(s => s.ID == saleId);
+            if (sale == null) throw new ArgumentException($"No sale found with ID: {saleId}");
+
+            var saleItem = sale.SaleItem.FirstOrDefault(item => item.Product.ID == productId);
+            if (saleItem == null) throw new ArgumentException($"Product with ID: {productId} not found in sale with ID: {saleId}");
+
+            if (quantity > saleItem.Quantity) throw new ArgumentException("Quantity to return exceeds the quantity sold in the sale.");
+
+            var product = products.FirstOrDefault(p => p.ID == productId);
+            if (product == null) throw new ArgumentException($"Product with ID: {productId} not found in the list of products.");
+
+            product.Quantity += quantity;
+            saleItem.Quantity -= quantity;
+
+            Console.WriteLine($"Product with ID: {productId} returned from sale with ID: {saleId}.");
         }
     }
+    
 }

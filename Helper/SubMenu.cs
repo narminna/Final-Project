@@ -42,16 +42,16 @@ namespace Final_Project.Helper
                         MenuServices.MenuAddProduct();
                         break;
                     case 2:
-                        MenuServices.MenuUpdatePorduct();
+                        MenuServices.MenuUpdateProduct();
                         break;
                     case 3:
                         MenuServices.MenuRemoveProduct();
                         break;
                     case 4:
-                        MenuServices.MenuShowAllProduct();
+                        MenuServices.MenuShowAllProducts();
                         break;
                     case 5:
-                        MenuServices.MenuChooseProductCategory();
+                        MenuServices.MenuChooseProductByCategory();
                         break;
                     case 6:
                         MenuServices.MenuPriceRangeProduct();
@@ -60,7 +60,7 @@ namespace Final_Project.Helper
                         MenuServices.MenuSearchProductByName();
                         break;
                     case 0:
-                        MenuServices.MenuGoBack();
+                        Console.WriteLine("Bye");
                         break;
                     default:
                         Console.WriteLine("No such option!");
@@ -110,7 +110,7 @@ namespace Final_Project.Helper
                         MenuServices.MenuShowAllSales();
                         break;
                     case 5:
-                        MenuServices.MenuShowSalesByDate();
+                        MenuServices.MenuShowSalesByDateRange();
                         break;
                     case 6:
                         MenuServices.MenuShowSalesByPrice();
@@ -123,7 +123,6 @@ namespace Final_Project.Helper
                         break;
                     case 0:
                         Console.WriteLine("Bye!");
-                        MenuServices.MenuGoBack();
                         break;
                     default:
                         Console.WriteLine("No such option!");

@@ -17,7 +17,7 @@ namespace Final_Project.Data.Models
         public SaleItem(Product product, int quantity)
         {
             Product = product;
-            Quantity = quantity;
+            Quantity = quantity; 
 
             ID = count;
             count++;

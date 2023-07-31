@@ -11,18 +11,22 @@ namespace Final_Project.Data.Models
     {
         private static int count = 0;
 
-        public double Amount { get; set; }
+        public decimal Amount { get; set; }
         public DateTime DateTime { get; set; }
-        public SaleItem SaleItem { get; set; }
+        public List<SaleItem> SaleItem { get; set; }
 
-        public Sales(double amount, DateTime datetime)
+        public Sales(decimal amount, List<SaleItem> saleItem, DateTime datetime)
         {
             Amount = amount;
+            SaleItem = saleItem;
             DateTime = datetime;
 
             ID = count;
             count++;
-
         }
-    }
+        public override string ToString()
+        {
+            return string.Join(", ", SaleItem.Select(item => item.Product.Name));
+        }
+    }    
 }
