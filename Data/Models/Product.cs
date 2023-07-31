@@ -10,14 +10,14 @@ namespace Final_Project.Data.Models
 {
     public class Product : BaseEntity
     {
-        private static int count =0;
-
+        private static int count =0;//counts product instance
+        //properties
         public string Name { get; set; }
         public decimal Price { get; set; }
         public Category Category { get; set; }
         public int Quantity { get; set; }
 
-        public Product(string name, decimal price, Category category, int quantity)
+        public Product(string name, decimal price, Category category, int quantity)//constructor
         {
             Name = name;
             Price = price;

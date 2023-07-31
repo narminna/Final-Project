@@ -9,8 +9,8 @@ namespace Final_Project.Data.Models
 {
     public class SaleItem : BaseEntity
     {
-        private static int count = 0;
-
+        private static int count = 0;//counts sales item instance
+        //properties
         public Product Product { get; set; }
         public int Quantity { get; set; }
 

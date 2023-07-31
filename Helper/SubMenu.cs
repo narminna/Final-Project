@@ -29,14 +29,14 @@ namespace Final_Project.Helper
                 Console.WriteLine("0. Go back");
                 Console.WriteLine("~-~-~-~-~-~-~-~-~-~-~-~-~-~-~");
 
-                while (!int.TryParse(Console.ReadLine(), out option))
+                while (!int.TryParse(Console.ReadLine(), out option))//checks if will be invalid input from user
                 {
                     Console.WriteLine("~-~-~-~-~-~-~-~-~-~-~-~-~-~-~");
                     Console.WriteLine("Please, enter a valid option:");
                     Console.WriteLine("~-~-~-~-~-~-~-~-~-~-~-~-~-~-~");
                 }
 
-                switch (option)
+                switch (option)//subclasses that works according choosen numbers
                 {
                     case 1:
                         MenuServices.MenuAddProduct();
@@ -69,7 +69,7 @@ namespace Final_Project.Helper
             } while (option != 0);
         }
 
-        public static void SalesSubmenu()
+        public static void SalesSubmenu()//same thing for sale
         {
             Console.Clear();
 
@@ -128,7 +128,7 @@ namespace Final_Project.Helper
                         Console.WriteLine("No such option!");
                         break;
                 }
-            } while (option!=0);
+            } while (option!=0);//out of option
         }
     }
 }

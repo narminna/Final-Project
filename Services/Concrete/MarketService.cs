@@ -14,16 +14,16 @@ namespace Final_Project.Services.Concrete
     public class MarketService : IMarketable
     {
 
-        private List<Product> products;
-        private List<Sales> sales;
-        private List<SaleItem> saleItems;
+        private List<Product> products;//List to store product
+        private List<Sales> sales;//List to store sales
+        private List<SaleItem> saleItems;//List to store saleItems
         public MarketService()
         {
             products = new List<Product>();
             sales = new List<Sales>();
             saleItems = new List<SaleItem>();
         }
-        public List<Product> GetProducts()
+        public List<Product> GetProducts()//methods for getting lists
         {
             return products;
         }
@@ -40,15 +40,16 @@ namespace Final_Project.Services.Concrete
 
         public int AddProduct(string name, decimal price, Category category, int quantity)
         {
-            if (string.IsNullOrWhiteSpace(name)) throw new Exception("Name is null!");
+            //checks the cases, if needed gives exceptions
+            if (string.IsNullOrWhiteSpace(name)) throw new Exception("Name is null!");//checks for spaces
 
             if (price < 0) throw new Exception("Price can't be less than 0!");
 
             if (quantity < 0) throw new Exception("Quantity can't be less than 0!");
 
-            var product = new Product(name, price, category, quantity);
+            var product = new Product(name, price, category, quantity);//creating product
             products.Add(product);
-            return product.ID;
+            return product.ID;//
         }
 
         public void UpdateProduct(int id, string name, decimal price, Category category, int quantity)
@@ -62,22 +63,22 @@ namespace Final_Project.Services.Concrete
             var product = products.FirstOrDefault(p => p.ID == id);
 
             if (product == null) throw new Exception("Product not found!");
-
+            //makes changes in each
             product.Name = name;
             product.Price = price;
             product.Category = category;
             product.Quantity = quantity;
         }
 
-        public void RemoveProduct(int id)
+        public void RemoveProduct(int id)//deletes product
         {
-            if (id < 0) throw new Exception("ID can't be less than 0!");
+            if (id < 0) throw new Exception("ID can't be less than 0!");//checks for conditions
 
-            int productIndex = products.FindIndex(p => p.ID == id);
+            int productIndex = products.FindIndex(p => p.ID == id);//looks for product by id
              
-            if (productIndex == -1) throw new Exception("Product not found!");
+            if (productIndex == -1) throw new Exception("Product not found!");//in case if not found
 
-            products.RemoveAt(productIndex);
+            products.RemoveAt(productIndex);//deletes from list
         }
         public List<Product> SearchProductsByName(string name)
         {
@@ -90,12 +91,12 @@ namespace Final_Project.Services.Concrete
         public List<Product> ShowProductsByPriceRange(decimal minPrice, decimal maxPrice)
         {
             if (minPrice > maxPrice) throw new Exception("Min Price can't be higher than max Price");
-            return products.Where(x=>x.Price >= minPrice && x.Price<=maxPrice).ToList();
+            return products.Where(x=>x.Price >= minPrice && x.Price<=maxPrice).ToList();// Finds products with prices within the range that user gives, returns the list.
         }
 
         public List<Product> ShowProductsByCategory(Category category)
         {
-            var productsFromCategory = products.Where(p => p.Category == category).ToList();
+            var productsFromCategory = products.Where(p => p.Category == category).ToList();//looks for product by given category
             return productsFromCategory;
         }
 
@@ -123,14 +124,14 @@ namespace Final_Project.Services.Concrete
 
         public int AddSale(int productId, int quantity, DateTime date)
         {
-            var product = products.Find(x => x.ID == productId);
+            var product = products.Find(x => x.ID == productId); //looks for sale by given id
 
             if (quantity <= 0) throw new Exception("Quantity can't be less than 0 or equal to 0!");
             if (product == null) throw new Exception("Product not found.");
             if (product.Quantity < quantity) throw new Exception("Not enough product in stock.");
 
-            var price = product.Price * quantity;
-            product.Quantity -= quantity;
+            var price = product.Price * quantity;//counts price according products in list
+            product.Quantity -= quantity;//subtracts sold quantyties
 
             var saleItem = new SaleItem(product, quantity);
             List<SaleItem> saleItems = new List<SaleItem> { saleItem };
@@ -144,7 +145,7 @@ namespace Final_Project.Services.Concrete
             int option;
             do
             {
-                Console.WriteLine("Do you want to add more sale item?");
+                Console.WriteLine("Do you want to add more sale item?");//checks whether user wants to continue adding proccess or not
                 Console.WriteLine("1. Yes");
                 Console.WriteLine("2. No");
 
@@ -189,7 +190,7 @@ namespace Final_Project.Services.Concrete
         {
             if (saleId < 0) throw new Exception("ID can't be less than 0!");
 
-            int saleIndex = sales.FindIndex(p => p.ID == saleId);
+            int saleIndex = sales.FindIndex(p => p.ID == saleId);////looks for sale by id
 
             if (saleIndex == -1) throw new ArgumentException("Sale not found!");
 
@@ -233,11 +234,11 @@ namespace Final_Project.Services.Concrete
 
         public void ReturnProductFromSale(int saleId, int productId, int quantity)
         {
-            if (saleId < 0) throw new ArgumentException("Sale ID can't be less than 0.", nameof(saleId));
+            if (saleId < 0) throw new ArgumentException("Sale ID can't be less than 0.", nameof(saleId));//checks conditions
             if (productId < 0) throw new ArgumentException("Product ID can't be less than 0.", nameof(productId));
             if (quantity <= 0) throw new ArgumentException("Quantity must be greater than 0.", nameof(quantity));
 
-            var sale = sales.FirstOrDefault(s => s.ID == saleId);
+            var sale = sales.FirstOrDefault(s => s.ID == saleId);//by using lamda expression looks for sale by id
             if (sale == null) throw new ArgumentException($"No sale found with ID: {saleId}");
 
             var saleItem = sale.SaleItem.FirstOrDefault(item => item.Product.ID == productId);

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Final_Project.Data.Common
 {
-    public abstract class BaseEntity
+    public abstract class BaseEntity//used for inheritance for classes
     {
         public int ID { get; set; }
     }

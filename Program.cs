@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Final_Project.Helper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Final_Project
 {
-    public class Program
+    public class Program//qst page of of program which then directs to sub classes
     {
         static void Main(string[] args)
         {
-            Console.Clear();
+            
             int option;
 
             do
@@ -32,8 +33,10 @@ namespace Final_Project
                 switch (option)
                 {
                     case 1:
+                        SubMenu.ProductSubMenu();
                         break;
                     case 2:
+                        SubMenu.SalesSubmenu();
                         break;
                     case 3:
                         Console.WriteLine("Bye!");

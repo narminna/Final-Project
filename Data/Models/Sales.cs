@@ -9,13 +9,13 @@ namespace Final_Project.Data.Models
 {
     public class Sales : BaseEntity
     {
-        private static int count = 0;
-
+        private static int count = 0;//counts sales instance
+        //sale properties
         public decimal Amount { get; set; }
         public DateTime DateTime { get; set; }
         public List<SaleItem> SaleItem { get; set; }
 
-        public Sales(decimal amount, List<SaleItem> saleItem, DateTime datetime)
+        public Sales(decimal amount, List<SaleItem> saleItem, DateTime datetime)//constructors
         {
             Amount = amount;
             SaleItem = saleItem;
@@ -24,7 +24,7 @@ namespace Final_Project.Data.Models
             ID = count;
             count++;
         }
-        public override string ToString()
+        public override string ToString()//provides a custom string representation of the sale instance
         {
             return string.Join(", ", SaleItem.Select(item => item.Product.Name));
         }

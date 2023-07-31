@@ -13,8 +13,8 @@ namespace Final_Project.Services.Concrete
 {
     public class MenuServices
     {
-        private static MarketService marketService = new MarketService();
-        public static void MenuAddProduct()
+        private static MarketService marketService = new MarketService();//creates market service instance to get access to methods
+        public static void MenuAddProduct() //the user enters the lower written information to create a new product
         {
             try
             {
@@ -22,15 +22,15 @@ namespace Final_Project.Services.Concrete
                 string name = Console.ReadLine();
 
                 Console.WriteLine("Enter price:");
-                decimal price = decimal.Parse(Console.ReadLine());
+                decimal price = decimal.Parse(Console.ReadLine());//takes as string turns to decimal
 
                 Console.WriteLine("Enter the number to choose Product Category: 0. Cereals 1. Vegetables 2. Fruits 3. Meat 4. Dairy 5. Drinks 6. Snacks 7. Frozen 8. Canned Food 9. Cleaning Stuff");
-                Category category = (Category)Enum.Parse(typeof(Category), Console.ReadLine(), true);
+                Category category = (Category)Enum.Parse(typeof(Category), Console.ReadLine(), true);//converts a numeric value that is of string type into a corresponding Enum
 
                 Console.WriteLine("Enter Product Quantity:");
                 int quantity = int.Parse(Console.ReadLine());
 
-                int newId = marketService.AddProduct(name, price, category, quantity);
+                int newId = marketService.AddProduct(name, price, category, quantity);//this information will be called to market service class
                 Console.WriteLine($"Froduct {name} with ID: {newId} has been successfully added!");
 
             }
@@ -40,7 +40,7 @@ namespace Final_Project.Services.Concrete
             }
         }
 
-        public static void MenuUpdateProduct()
+        public static void MenuUpdateProduct()//with this method can updated before given data
         {
 
             try
@@ -71,7 +71,7 @@ namespace Final_Project.Services.Concrete
             }
         }
 
-        public static void MenuRemoveProduct()
+        public static void MenuRemoveProduct()//deletes selected by id product from list
         {
 
             try
@@ -95,15 +95,15 @@ namespace Final_Project.Services.Concrete
             {
                 var products = marketService.GetProducts();
 
-                if (products.Count == 0)
+                if (products.Count == 0)//checks whether there is a product before then to show it later
                 {
                     Console.WriteLine("No products have been found");
                     return;
                 }
 
-                var table = new ConsoleTable("ID", "Name", "Price", "Category", "Quantity");
+                var table = new ConsoleTable("ID", "Name", "Price", "Category", "Quantity");//collums in table
 
-                foreach (var product in products)
+                foreach (var product in products)//loop that will output in rows data
                 {
                     table.AddRow(product.ID, product.Name, product.Price, product.Category, product.Quantity);
                 }
@@ -116,7 +116,7 @@ namespace Final_Project.Services.Concrete
             }
         }
 
-        public static void MenuChooseProductByCategory()
+        public static void MenuChooseProductByCategory()//Show products by category
         {
             try
             {
@@ -129,7 +129,7 @@ namespace Final_Project.Services.Concrete
                 string userInput = Console.ReadLine();
                 Category category;
 
-                if (!Enum.TryParse(userInput, true, out category))
+                if (!Enum.TryParse(userInput, true, out category))//Converts the string representation of the name or numeric value 
                 {
                     Console.WriteLine($"Invalid category input: {userInput}");
                     return;
@@ -153,7 +153,7 @@ namespace Final_Project.Services.Concrete
             }
         }
 
-        public static void MenuPriceRangeProduct()
+        public static void MenuPriceRangeProduct()//gets from the list the product according given price range from user
         {
             try
             {
@@ -171,7 +171,7 @@ namespace Final_Project.Services.Concrete
                     Console.WriteLine("Invalid input!");
                 }
 
-                var prodRange = marketService.ShowProductsByPriceRange(minPrice, maxPrice);
+                var prodRange = marketService.ShowProductsByPriceRange(minPrice, maxPrice);//calls market service method to show product by iven price range
                 if (prodRange.Count == 0) throw new Exception("No products found in that range.");
                 else
                 {
@@ -219,7 +219,7 @@ namespace Final_Project.Services.Concrete
             }
         }
 
-        public static void MenuAddSales()
+        public static void MenuAddSales()//during add sale method, sends which and the number and the date of products
         {
             try
             {
@@ -240,7 +240,7 @@ namespace Final_Project.Services.Concrete
             }
         }
 
-        public static void MenuReturnSales()
+        public static void MenuReturnSales()//returns the product from sale by id
         {
             try
             {
@@ -261,7 +261,7 @@ namespace Final_Project.Services.Concrete
             }
         }
 
-        public static void MenuRemoveSales()
+        public static void MenuRemoveSales()//removes total sale
         {
             try
             {
@@ -304,7 +304,7 @@ namespace Final_Project.Services.Concrete
             }
         }
 
-        public static void MenuShowSalesByDateRange()
+        public static void MenuShowSalesByDateRange()//gets from the list the sales according given date range from user
         {
             try
             {
@@ -333,7 +333,7 @@ namespace Final_Project.Services.Concrete
             }
         }
 
-        public static void MenuShowSalesByPrice()
+        public static void MenuShowSalesByPrice()//here gets from the list according one exact date
         {
             try
             {
@@ -365,7 +365,7 @@ namespace Final_Project.Services.Concrete
         }
 
 
-        public static void MenuShowSalesByGivenDate()
+        public static void MenuShowSalesByGivenDate()//gets from the list the sales according given price range from user
         {
             try
             {
@@ -391,14 +391,14 @@ namespace Final_Project.Services.Concrete
             }
         }
 
-        public static void MenuShowSalesByGivenID()
+        public static void MenuShowSalesByGivenID()//returns as output according id that user will give
         {
             try
             {
                 Console.WriteLine("Enter Sale's ID for search:");
                 int id = int.Parse(Console.ReadLine());
 
-                var foundSale = marketService.ShowSaleByID(id);
+                var foundSale = marketService.ShowSaleByID(id);//calls market service method to show sales according ID 
 
                 if (foundSale.Count == 0)
                 {
